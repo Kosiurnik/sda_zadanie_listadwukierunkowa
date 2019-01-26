@@ -17,8 +17,8 @@ class LDList {
             first = element;
             last = first;
         }else{
-            first.setPrev(element);
             element.setNext(first);
+            first.setPrev(element);
             first = element;
         }
         size++;
@@ -38,15 +38,13 @@ class LDList {
     }
 
     int peekFirst(){
-        if(isEmpty())
-            return 0;
+        if(isEmpty()) throw new NoSuchElementException();
         else
             return first.getValue();
     }
 
     int peekLast(){
-        if(isEmpty())
-            return 0;
+        if(isEmpty()) throw new NoSuchElementException();
         else
             return last.getValue();
     }
@@ -56,8 +54,7 @@ class LDList {
         else{
             LDElement element = first;
             if(first.getNext() == null){
-                first = null;
-                last = null;
+                first = last = null;
             }else{
                 first = first.getNext();
                 first.setPrev(null);
@@ -72,8 +69,7 @@ class LDList {
         else{
             LDElement element = last;
             if(last.getPrev() == null){
-                first = null;
-                last = null;
+                first = last = null;
             }else{
                 last = last.getPrev();
                 last.setNext(null);
@@ -89,16 +85,13 @@ class LDList {
             System.out.println(first.getValue());
             return;
         }
-        LDElement element;
-        System.out.print(first.getValue()+"\t");
-        element = first.getNext();
-        while(element.getNext() != null){
+        LDElement element = first;
+        while(element != null){
             System.out.print(element.getValue()+"\t");
             element = element.getNext();
         }
-        System.out.println(element.getValue());
+        System.out.println();
     }
-
 
     void showReverse(){
         if(size == 0) return;
@@ -106,14 +99,38 @@ class LDList {
             System.out.println(last.getValue());
             return;
         }
-        LDElement element;
-        System.out.print(last.getValue()+"\t");
-        element = last.getPrev();
-        while(element.getPrev() != null){
+        LDElement element = last;
+        while(element != null){
             System.out.print(element.getValue()+"\t");
             element = element.getPrev();
         }
-        System.out.println(element.getValue());
+        System.out.println();
+    }
+
+    boolean isElement(int value){
+        LDElement element = first;
+        while(element!=null){
+            if(value==element.getValue()){
+                return true;
+            }
+            element = element.getNext();
+        }
+        return false;
+    }
+
+    void removeByValue(int value){
+        LDElement element = first;
+        while(element!=null){
+            if(value==first.getValue()){
+                pollFirst();
+            }else if(value == last.getValue()){
+                pollLast();
+            }else if(value == element.getValue()){
+                element.getPrev().setNext(element.getNext());
+                element.getNext().setPrev(element.getPrev());
+            }
+            element = element.getNext();
+        }
     }
 
     private boolean isEmpty(){
